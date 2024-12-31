@@ -51,6 +51,8 @@ pub fn Tree(comptime T: type) type {
         /// Errors:
         ///     If a new node cannot be allocated.
         pub fn allocateNode(tree: *Self, allocator: *Allocator) !*Node {
+            _ = tree;
+
             return allocator.create(Node);
         }
 
@@ -76,7 +78,7 @@ pub fn Tree(comptime T: type) type {
         /// Errors:
         ///     If a new node cannot be allocated.
         pub fn createNode(tree: *Self, value: T, allocator: *Allocator) !*Node {
-            var node = try tree.allocateNode(allocator);
+            const node = try tree.allocateNode(allocator);
             node.* = Node.init(value);
             return node;
         }
@@ -90,6 +92,7 @@ pub fn Tree(comptime T: type) type {
         /// Returns:
         ///     A pointer to the new node.
         pub fn insert(tree: *Self, node: *Node, parent: *Node) void {
+            _ = tree;
             node.parent = parent;
             node.right_sibling = parent.leftmost_child;
             parent.leftmost_child = node;
@@ -100,7 +103,11 @@ pub fn Tree(comptime T: type) type {
         /// Arguments:
         ///     other: Pointer to the tree to insert.
         ///     parent: Pointer to node which the newly created node will be a parent of.
-        pub fn graft(tree: *Self, other: *Self, parent: *Node) void {}
+        pub fn graft(tree: *Self, other: *Self, parent: *Node) void {
+            _ = tree;
+            _ = other;
+            _ = parent;
+        }
 
         /// Remove (detach) a "branch" from the tree (remove node and all its descendants).
         /// Does nothing when applied to root node.
@@ -241,12 +248,12 @@ test "tree node insertion" {
     //var buffer: [5000]u8 = undefined;
     // const allocator = &FixedBufferAllocator.init(buffer[0..]).allocator;
 
-    var two = try tree.createNode(2, allocator);
-    var three = try tree.createNode(3, allocator);
-    var four = try tree.createNode(4, allocator);
-    var five = try tree.createNode(5, allocator);
-    var six = try tree.createNode(6, allocator);
-    var fortytwo = try tree.createNode(42, allocator);
+    const two = try tree.createNode(2, allocator);
+    const three = try tree.createNode(3, allocator);
+    const four = try tree.createNode(4, allocator);
+    const five = try tree.createNode(5, allocator);
+    const six = try tree.createNode(6, allocator);
+    const fortytwo = try tree.createNode(42, allocator);
     defer {
         tree.destroyNode(two, allocator);
         tree.destroyNode(three, allocator);
@@ -280,11 +287,11 @@ test "tree node removal" {
 
     const allocator = std.debug.global_allocator;
 
-    var two = try tree.createNode(2, allocator);
-    var three = try tree.createNode(3, allocator);
-    var four = try tree.createNode(4, allocator);
-    var five = try tree.createNode(5, allocator);
-    var six = try tree.createNode(6, allocator);
+    const two = try tree.createNode(2, allocator);
+    const three = try tree.createNode(3, allocator);
+    const four = try tree.createNode(4, allocator);
+    const five = try tree.createNode(5, allocator);
+    const six = try tree.createNode(6, allocator);
     defer {
         tree.destroyNode(three, allocator);
         tree.destroyNode(four, allocator);
